@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.postgres.name }}-deployment
+  labels:
+    {{- include "zur.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.client.autoscaling.enabled }}
+  replicas: {{ .Values.postgres.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: {{ .Values.postgres.component }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        component: {{ .Values.postgres.component }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "zur.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: {{ .Values.postgres.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.postgres.claimName}}
+      containers:
+        - name: {{ .Values.postgres.containers.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.postgres.containers.image.name }}:{{ .Values.postgres.containers.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            {{ .Values.containers.ports}}
+          volumeMounts:
+            {{ .Values.containers.volumeMounts }}
+          env:
+            {{ .Values.containers.env }}    
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
