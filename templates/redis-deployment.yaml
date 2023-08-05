@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.redis.name }}-deployment
+  labels:
+    {{- include "zur.labels" . | nindent 4 }}
+spec:
+ {{ .Values.redis.spec}}  # Is it ok this way?
+                          # In this way, I took out a lot of helm default values

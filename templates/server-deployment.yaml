@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "zur.fullname" . }}
+  name: {{ .Values.client.appName }}-deployment
   labels:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.client.autoscaling.enabled }}
-  replicas: {{ .Values.client.replicaCount }}
+  replicas: {{ .Values.redis.spec.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "zur.selectorLabels" . | nindent 6 }}
+      component: {{ .Values.spec.matchLabels.component }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "zur.selectorLabels" . | nindent 8 }}
+        component: {{ .Values.spec.matchLabels.component }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -31,12 +31,14 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.server.spec.tamplate.spec.containers.image.name }}:{{ .Values.server.spec.tamplate.spec.containers.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
+            - name: server
+              containerPort: {{ .Values.server.spec.tamplate.spec.containers.ports }}
               protocol: TCP
+          env:
+            {{.Values.server.spec.tamplate.spec.containers.env}}    
           livenessProbe:
             httpGet:
               path: /

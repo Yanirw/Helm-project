@@ -2,18 +2,144 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 client:
+  appName: client
   replicaCount: 1
-  image:
-    repository: nginx
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+  image: 
+    name: yanirdocker/multi-client
+    tag: latest
   service:
     type: ClusterIP
-    port: 80  
+    port: 3000
+  component: web
 
 postgres:
+  name: postgres
   replicaCount: 1
+  component: postgres
+  claimName: database-persistent-volume-claim
+  containers:
+    name: postgres
+    image: postgres
+    tag: latest
+    ports: 
+      - containerPort: 5432
+    volumeMounts:
+      - name: postgres-storage
+        mountPath: /var/lib/postgresql/data
+        subPath: postgres
+    env:
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: pgpassword
+            key: PGPASSWORD           
+  service:
+    type: ClusterIP
+    ports:
+     - port: 5432
+       targetPort: 5432    
+
+
+pvc: 
+  name: database-persistent-volume-claim
+  accessMode: ReadWriteOnce
+  storageSize: 2Gi
+
+redis:
+  name: redis
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        component: redis
+    template:
+      metadata:
+        labels:
+          component: redis
+      spec:
+        containers:
+          - name: redis
+            image: redis
+            ports:
+              - containerPort: 6379
+  service:
+    type: ClusterIP
+    selector:
+      component: redis
+    ports:
+      - port: 6379
+        targetPort: 6379 
+
+server:
+  name: server
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        component: server  
+    template:
+      metadata:
+        labels:
+          component: server
+      spec:
+        containers:
+          - name: server
+            image:
+              name: yanirdocker/multi-server
+              tag:  latest  
+            ports:  
+              - containerPort: 5000
+            env: 
+              - name: REDIS_HOST
+                value: redis-cluster-ip-service
+              - name: REDIS_PORT
+                value: '6379'
+              - name: PGUSER
+                value: postgres
+              - name: PGHOST
+                value: postgres-cluster-ip-service
+              - name: PGPORT
+                value: '5432'
+              - name: PGDATABASE
+                value: postgres
+              - name: PGPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: pgpassword
+                    key: PGPASSWORD             
+  service:
+    selector:
+      component: server
+    ports:
+      - port: 5000
+        targetPort: 5000
+       
+
+worker:
+  name: worker
+  spec:
+    spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      component: worker
+  template: 
+    metadata:
+      labels:
+        component: worker
+    spec:
+      containers:
+        - name: worker
+          image:
+            name: yanirdocker/multi-worker
+            tag:  latest
+          env: 
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379' 
+
+
 
 image:
   repository: nginx
