@@ -3,6 +3,8 @@
 # Declare variables to be passed into your templates.
 client:
   appName: client
+  autoscaling:
+    enabled: true
   replicaCount: 1
   image: 
     name: yanirdocker/multi-client
@@ -114,11 +116,8 @@ server:
       - port: 5000
         targetPort: 5000
        
-
 worker:
   name: worker
-  spec:
-    spec:
   replicas: 1  
   selector:
     matchLabels:
@@ -130,15 +129,13 @@ worker:
     spec:
       containers:
         - name: worker
-          image:
-            name: yanirdocker/multi-worker
-            tag:  latest
+          image: yanirdocker/multi-worker
+          tag: latest
           env: 
             - name: REDIS_HOST
               value: redis-cluster-ip-service
             - name: REDIS_PORT
               value: '6379' 
-
 
 
 image:
