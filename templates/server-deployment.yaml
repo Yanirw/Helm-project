@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.client.appName }}-deployment
+  name: {{ .Values.server.name }}-deployment
   labels:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.client.autoscaling.enabled }}
+  {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.redis.spec.replicas }}
   {{- end }}
   selector:

@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 client:
-  appName: client
+  name: client
   autoscaling:
     enabled: true
   replicaCount: 1
@@ -49,21 +49,12 @@ pvc:
 
 redis:
   name: redis
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
-        component: redis
-    template:
-      metadata:
-        labels:
-          component: redis
-      spec:
-        containers:
-          - name: redis
-            image: redis
-            ports:
-              - containerPort: 6379
+  replicaCount: 1
+
+  image:
+    repository: redis
+    tag: latest
+      
   service:
     type: ClusterIP
     selector:
@@ -74,6 +65,8 @@ redis:
 
 server:
   name: server
+  autoscaling:
+    enabled: true
   spec:
     replicas: 3
     selector:
@@ -115,27 +108,29 @@ server:
     ports:
       - port: 5000
         targetPort: 5000
-       
+
 worker:
   name: worker
-  replicas: 1  
+  replicas: 1
+  repository: yanirdocker/multi-worker
+  repository_tag: latest
   selector:
     matchLabels:
       component: worker
-  template: 
+  template:
     metadata:
       labels:
         component: worker
     spec:
       containers:
-        - name: worker
-          image: yanirdocker/multi-worker
-          tag: latest
-          env: 
+          env:
             - name: REDIS_HOST
               value: redis-cluster-ip-service
             - name: REDIS_PORT
-              value: '6379' 
+              value: '6379'
+
+
+
 
 
 image:

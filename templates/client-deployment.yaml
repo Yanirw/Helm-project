@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.client.appName }}-deployment
+  name: {{ .Values.client.name }}-deployment
   labels:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.client.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
