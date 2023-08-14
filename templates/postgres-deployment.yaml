@@ -35,14 +35,14 @@ spec:
         - name: {{ .Values.postgres.containers.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.postgres.containers.image.name }}:{{ .Values.postgres.containers.tag }}"
+          image: "{{ .Values.postgres.containers.image }}:{{ .Values.postgres.containers.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            {{ .Values.containers.ports}}
+            - containerPort: {{ .Values.postgres.containers.ports.containerPort }}
           volumeMounts:
-            {{ .Values.containers.volumeMounts }}
+            {{- toYaml .Values.postgres.containers.volumeMounts | nindent 12 }}
           env:
-            {{ .Values.containers.env }}    
+            {{- toYaml .Values.postgres.containers.env | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /

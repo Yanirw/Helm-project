@@ -6,11 +6,11 @@ metadata:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.server.autoscaling.enabled }}
-  replicas: {{ .Values.redis.spec.replicas }}
+  replicas: {{ .Values.server.spec.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      component: {{ .Values.spec.matchLabels.component }}
+      component: {{ .Values.server.spec.matchLabels.component }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        component: {{ .Values.spec.selector.matchLabels.component }}
+        component: {{ .Values.server.spec.template.metadata.labels.component }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -31,14 +31,14 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.server.spec.tamplate.spec.containers.image.name }}:{{ .Values.server.spec.tamplate.spec.containers.image.tag }}"
+          image: "{{ index .Values.server.spec.template.spec.containers.image.name }}:{{ .Values.server.spec.template.spec.containers.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: server
-              containerPort: {{ .Values.server.spec.tamplate.spec.containers.ports }}
+              containerPort: {{ .Values.server.spec.template.spec.containers.image.ports.containerPort }}
               protocol: TCP
           env:
-            {{.Values.server.spec.tamplate.spec.containers.env}}    
+            {{- toYaml .Values.server.spec.template.spec.containers.env | nindent 12 }}   
           livenessProbe:
             httpGet:
               path: /
