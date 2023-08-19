@@ -1,6 +1,3 @@
-# Default values for zur.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 client:
   name: client
   autoscaling:
@@ -129,8 +126,6 @@ worker:
               value: '6379'
 
 
-
-
 image:
   repository: nginx
   pullPolicy: IfNotPresent
@@ -196,11 +191,14 @@ resources: {}
   #   memory: 128Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+pdb:
+  maxUnavailable: 1
 
 nodeSelector: {}
 
