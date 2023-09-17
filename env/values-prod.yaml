@@ -197,11 +197,20 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-pdb:
+pdb-client:
   minUnavailable: 2
+
+pdb-server:
+  minUnavailable: 2
+
+pdb-worker:
+  minUnavailable: 2
+
 
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+

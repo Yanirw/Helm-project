@@ -1,0 +1,35 @@
+name: Helm Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main 
+  pull_request:
+    branches:
+      - main 
+  branch_protection_rule:
+    REQUIRED_APPROVING_REVIEWS: 1
+    ENFORCE_ADMIN: true
+    REQUIRED_STATUS_CHECKS: 'Helm Template'
+
+jobs:
+  helm_template:
+    name: Helm Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: 'latest'
+
+    - name: Helm Template
+      run: |
+        helm template .
+
+    
+    
