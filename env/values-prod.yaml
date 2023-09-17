@@ -13,7 +13,7 @@ client:
 
 postgres:
   name: postgres
-  replicaCount: 1
+  replicaCount: 10
   component: postgres
   claimName: database-persistent-volume-claim
   containers:
@@ -120,10 +120,10 @@ worker:
     spec:
       containers:
         - env:
-            - name: REDIS_HOST
-              value: redis-cluster-ip-service
-            - name: REDIS_PORT
-              value: '6379'
+          - name: REDIS_HOST
+            value: redis-cluster-ip-service
+          - name: REDIS_PORT
+            value: '6379'
 
 
 image:
@@ -198,7 +198,7 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdb:
-  maxUnavailable: 1
+  minUnavailable: 2
 
 nodeSelector: {}
 
