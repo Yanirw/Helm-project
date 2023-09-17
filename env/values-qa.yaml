@@ -46,7 +46,7 @@ pvc:
 
 redis:
   name: redis
-  replicaCount: 1
+  replicaCount: 2
 
   image:
     repository: redis
@@ -198,8 +198,8 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdb:
-  maxUnavailable: 1
-  
+  minUnavailable: 2
+
 nodeSelector: {}
 
 tolerations: []

@@ -1,9 +1,9 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "zur.fullname" . }}
+  name: {{ .Values.worker.name }}
 spec:
-  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  minUnavailable: {{ .Values.pdb.minUnavailable }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "zur.name" . }}
+      app.kubernetes.io/name: {{ .Values.worker.name }}
