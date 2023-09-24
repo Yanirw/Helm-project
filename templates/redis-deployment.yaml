@@ -1,9 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.redis.name }}-deployment
-  labels:
-    {{- include "zur.labels" . | nindent 4 }}
+  name: {{ .Values.redis.name }}
 spec:
- {{ .Values.redis.spec}}  # Is it ok this way?
-                          # In this way, I took out a lot of helm default values
+  replicas: {{ .Values.redis.replicaCount }}
+  selector:
+    matchLabels:
+      component: redis
+  template:
+    metadata:
+      labels:
+        component: redis
+    spec:
+      containers:
+        - name: redis
+          image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+          ports:
+            - containerPort: {{ .Values.redis.service.ports.port }}

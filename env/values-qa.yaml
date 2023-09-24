@@ -1,8 +1,5 @@
-# Default values for zur.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 client:
-  appName: client
+  name: client
   autoscaling:
     enabled: true
   replicaCount: 1
@@ -24,22 +21,22 @@ postgres:
     image: postgres
     tag: latest
     ports: 
-      - containerPort: 5432
+      containerPort: 5432
     volumeMounts:
-      - name: postgres-storage
-        mountPath: /var/lib/postgresql/data
-        subPath: postgres
+      name: postgres-storage
+      mountPath: /var/lib/postgresql/data
+      subPath: postgres
     env:
-      - name: POSTGRES_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: pgpassword
-            key: PGPASSWORD           
+      name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: pgpassword
+          key: PGPASSWORD           
   service:
     type: ClusterIP
     ports:
-     - port: 5432
-       targetPort: 5432    
+      port: 5432
+      targetPort: 5432    
 
 
 pvc: 
@@ -49,48 +46,40 @@ pvc:
 
 redis:
   name: redis
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
-        component: redis
-    template:
-      metadata:
-        labels:
-          component: redis
-      spec:
-        containers:
-          - name: redis
-            image: redis
-            ports:
-              - containerPort: 6379
+  replicaCount: 2
+
+  image:
+    repository: redis
+    tag: latest
+      
   service:
     type: ClusterIP
     selector:
       component: redis
     ports:
-      - port: 6379
-        targetPort: 6379 
+      port: 6379
+      targetPort: 6379 
 
 server:
   name: server
+  autoscaling:
+    enabled: true
   spec:
     replicas: 3
-    selector:
-      matchLabels:
-        component: server  
+    matchLabels:
+      component: server  
     template:
       metadata:
         labels:
           component: server
       spec:
         containers:
-          - name: server
-            image:
-              name: yanirdocker/multi-server
-              tag:  latest  
+          name: server
+          image:
+            name: yanirdocker/multi-server
+            tag: latest
             ports:  
-              - containerPort: 5000
+              containerPort: 5000
             env: 
               - name: REDIS_HOST
                 value: redis-cluster-ip-service
@@ -113,29 +102,28 @@ server:
     selector:
       component: server
     ports:
-      - port: 5000
-        targetPort: 5000
-       
+      port: 5000
+      targetPort: 5000
+
 worker:
   name: worker
-  replicas: 1  
+  replicas: 1
+  repository: yanirdocker/multi-worker
+  repository_tag: latest
   selector:
     matchLabels:
       component: worker
-  template: 
+  template:
     metadata:
       labels:
         component: worker
     spec:
       containers:
-        - name: worker
-          image: yanirdocker/multi-worker
-          tag: latest
-          env: 
+        - env:
             - name: REDIS_HOST
               value: redis-cluster-ip-service
             - name: REDIS_PORT
-              value: '6379' 
+              value: '6379'
 
 
 image:
@@ -203,11 +191,21 @@ resources: {}
   #   memory: 128Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+pdbClient:
+  minUnavailable: 2
+
+pdbServer:
+  minUnavailable: 2
+
+pdbWorker:
+  minUnavailable: 2
+
 
 nodeSelector: {}
 

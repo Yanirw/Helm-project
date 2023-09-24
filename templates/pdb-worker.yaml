@@ -1,0 +1,9 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.worker.name }}
+spec:
+  minUnavailable: {{ .Values.pdbWorker.minUnavailable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.worker.name }}

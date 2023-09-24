@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main 
+  pull_request:
+  
+jobs:
+  helm_template:
+    name: Helm Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: 'latest'
+
+    - name: Helm Template
+      run: |
+       if helm template .. --values ../env/values-prod.yaml | grep -E -i "(error:|failed|Error:)" ; then
+          echo "Helm template failed with errors."
+          exit 1
+        else
+          echo "Helm template succeeded."
+        fi
+    
+    
