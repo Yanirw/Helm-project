@@ -7,12 +7,12 @@ provider "kubernetes" {
 }
 
 module "vpc" {
-  source   = "../modules/vpc"
+  source   = "../vpc"
   vpc_name = var.vpc_name
 }
 
 module "subnet" {
-  source        = "../modules/subnet"
+  source        = "../subnet"
   subnet_name   = var.subnet_name
   region        = var.region
   vpc_network   = module.vpc.vpc_id

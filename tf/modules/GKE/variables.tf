@@ -1,5 +1,3 @@
-variable "vpc_name" {}
-variable "subnet_name" {}
 variable "subnet_cidr" {}
 variable "zones" {}
 
@@ -25,7 +23,7 @@ variable "subnet_name" {
 }
 
 variable "ip_range_pods" {
-  description = "IP range for GKE pods"
+  description = "IP range for GKE pods 2"
   type        = string
 }
 

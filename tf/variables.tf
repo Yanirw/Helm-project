@@ -1,4 +1,4 @@
-variable "gcp_project_name" {}
+variable "project_id" {}
 variable "region" {}
 variable "vpc_name" {
   description = "Name of the VPC where the GKE cluster will be deployed"
@@ -21,7 +21,7 @@ variable "zones" {
 }
 
 variable "ip_range_pods" {
-  description = "IP range for GKE pods"
+  description = "IP range for GKE pods 1"
   type        = string
 }
 
