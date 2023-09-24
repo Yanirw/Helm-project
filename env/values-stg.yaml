@@ -197,13 +197,13 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-pdb-client:
+pdbClient:
   minUnavailable: 2
 
-pdb-server:
+pdbServer:
   minUnavailable: 2
 
-pdb-worker:
+pdbWorker:
   minUnavailable: 2
 
 

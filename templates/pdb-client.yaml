@@ -3,7 +3,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ .Values.worker.name }}
 spec:
-  minUnavailable: {{ .Values.pdb-client.minUnavailable }}
+  minUnavailable: {{ .Values.pdbClient.minUnavailable }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Values.worker.name }}

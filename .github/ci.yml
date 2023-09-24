@@ -1,4 +1,4 @@
-name: Helm Check
+name: ci
 
 on:
   workflow_dispatch:
@@ -6,13 +6,7 @@ on:
     branches:
       - main 
   pull_request:
-    branches:
-      - main 
-  branch_protection_rule:
-    REQUIRED_APPROVING_REVIEWS: 1
-    ENFORCE_ADMIN: true
-    REQUIRED_STATUS_CHECKS: 'Helm Template'
-
+  
 jobs:
   helm_template:
     name: Helm Check
@@ -29,7 +23,11 @@ jobs:
 
     - name: Helm Template
       run: |
-        helm template .
-
+       if helm template .. --values ../env/values-prod.yaml | grep -E -i "(error:|failed|Error:)" ; then
+          echo "Helm template failed with errors."
+          exit 1
+        else
+          echo "Helm template succeeded."
+        fi
     
     
