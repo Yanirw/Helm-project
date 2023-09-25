@@ -8,12 +8,12 @@ terraform {
     bucket = "gke-project-bucket"
     prefix = "terraform/state"
   }
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 4.0"
-    }
-  }
+#   required_providers {
+#     google = {
+#       source  = "hashicorp/google"
+#       version = "~> 4.0"
+#     }
+#   }
 }
 
 module "GKE" {
