@@ -1,1 +1,0 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"gke","Source":"registry.terraform.io/terraform-google-modules/kubernetes-engine/google","Version":"28.0.0","Dir":".terraform/modules/gke"},{"Key":"node_pools","Source":"../node_pools","Dir":"../node_pools"},{"Key":"subnet","Source":"../subnet","Dir":"../subnet"},{"Key":"vpc","Source":"../vpc","Dir":"../vpc"}]}

@@ -1,58 +1,42 @@
 variable "subnet_cidr" {}
-variable "zones" {}
-
-
-variable "project_id" {
-  description = "Google Cloud project ID"
-  type        = string
+variable "zones" {
+  type = list(string)
 }
-
-variable "region" {
-  description = "Google Cloud region"
-  type        = string
-}
-
-variable "vpc_name" {
-  description = "Name of the VPC where the GKE cluster will be deployed"
-  type        = string
-}
-
-variable "subnet_name" {
-  description = "Name of the subnet within the VPC for the GKE cluster"
-  type        = string
-}
-
-variable "ip_range_pods" {
-  description = "IP range for GKE pods 2"
-  type        = string
-}
-
-variable "ip_range_services" {
-  description = "IP range for GKE services"
-  type        = string
-}
+variable "project_id" {}
+variable "region" {}
+variable "vpc_name" {}
+variable "subnet_name" {}
+variable "ip_range_pods" {}
+variable "ip_range_services" {}
+variable "gke_cluster_name" {}
 
 variable "node_pools" {
   description = "List of node pool configurations"
-  type        = list(object({
-    name                      = string
-    machine_type              = string
-    node_locations            = list(string)
-    min_count                 = number
-    max_count                 = number
-    local_ssd_count           = number
-    spot                      = bool
-    disk_size_gb              = number
-    disk_type                 = string
-    image_type                = string
-    enable_gcfs               = bool
-    enable_gvnic              = bool
-    logging_variant           = string
-    auto_repair               = bool
-    auto_upgrade              = bool
-    service_account           = string
-    preemptible               = bool
-    initial_node_count        = number
-  }))
+  type        = list(map(string))
 }
+
+
+# variable "node_pools" {
+#   description = "List of node pool configurations"
+#   type        = list(object({
+#     name                      = string
+#     machine_type              = string
+#     node_locations            = list(string)
+#     min_count                 = number
+#     max_count                 = number
+#     local_ssd_count           = number
+#     spot                      = bool
+#     disk_size_gb              = number
+#     disk_type                 = string
+#     image_type                = string
+#     enable_gcfs               = bool
+#     enable_gvnic              = bool
+#     logging_variant           = string
+#     auto_repair               = bool
+#     auto_upgrade              = bool
+#     service_account           = string
+#     preemptible               = bool
+#     initial_node_count        = number
+#   }))
+# }
 

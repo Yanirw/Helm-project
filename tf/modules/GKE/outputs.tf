@@ -12,3 +12,7 @@ output "gke_ca_certificate" {
   description = "CA certificate for the GKE cluster"
   value       = module.gke.ca_certificate
 }
+
+output "debug_node_pools" {
+  value = var.node_pools
+}

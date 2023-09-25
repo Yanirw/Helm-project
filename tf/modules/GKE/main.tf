@@ -9,6 +9,7 @@ provider "kubernetes" {
 module "vpc" {
   source   = "../vpc"
   vpc_name = var.vpc_name
+  subnet   = module.subnet.subnet_name
 }
 
 module "subnet" {
@@ -21,11 +22,10 @@ module "subnet" {
 
 module "node_pools" {
   source            = "../node_pools"  
-  project_id        = var.project_id
   region            = var.region
   gke_cluster_name  = var.gke_cluster_name
   node_pools        = var.node_pools
-}  
+  }  
 
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
@@ -43,10 +43,46 @@ module "gke" {
   filestore_csi_driver       = false
 
   node_pools = module.node_pools.node_pools
+  node_pools_oauth_scopes = {
+    all = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+  }
 
-  node_pools_oauth_scopes = module.node_pools.node_pools_oauth_scopes
-  node_pools_labels      = module.node_pools.node_pools_labels
-  node_pools_metadata    = module.node_pools.node_pools_metadata
-  node_pools_taints      = module.node_pools.node_pools_taints
-  node_pools_tags        = module.node_pools.node_pools_tags
+  node_pools_labels = {
+    all = {}
+
+    default-node-pool = {
+      default-node-pool = true
+    }
+  }
+
+  node_pools_metadata = {
+    all = {}
+
+    default-node-pool = {
+      node-pool-metadata-custom-value = "my-node-pool"
+    }
+  }
+
+  node_pools_taints = {
+    all = []
+
+    default-node-pool = [
+      {
+        key    = "default-node-pool"
+        value  = true
+        effect = "PREFER_NO_SCHEDULE"
+      },
+    ]
+  }
+
+  node_pools_tags = {
+    all = []
+
+    default-node-pool = [
+      "default-node-pool",
+    ]
+  }
 }
