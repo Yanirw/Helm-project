@@ -1,19 +1,7 @@
-resource "google_project_service" "compute" {
-  service = "compute.googleapis.com"
-}
-
-resource "google_project_service" "container" {
-  service = "container.googleapis.com"
-}
-
 resource "google_compute_network" "my_vpc" {
   name                    = var.vpc_name
   auto_create_subnetworks = false
 
-   depends_on = [
-    google_project_service.compute,
-    google_project_service.container
-  ]
 }
 
 #cloud router
@@ -45,7 +33,6 @@ resource "google_compute_address" "nat" {
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
 
-  depends_on = [google_project_service.compute]
 }
 
 

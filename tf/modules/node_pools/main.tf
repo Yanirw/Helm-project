@@ -1,3 +1,7 @@
+# resource "google_service_account" "kubernetes" {
+#   account_id = "kubernetes"
+# }
+
 resource "google_container_node_pool" "node_pools" {
   count             = length(var.node_pools)
   name              = var.node_pools[count.index].name
