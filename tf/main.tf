@@ -1,20 +1,21 @@
 provider "google" {
+  credentials = file("/Users/yanir/Documents/guitarnetes-26919a8c9de8.json")
   project = var.gcp_project_name
   region  = var.region
 }
 
-terraform {
-  backend "gcs" {
-    bucket = "gke-project-bucket"
-    prefix = "terraform/state"
-  }
-#   required_providers {
-#     google = {
-#       source  = "hashicorp/google"
-#       version = "~> 4.0"
-#     }
+# terraform {
+#   backend "gcs" {
+#     bucket = "gke-project-bucket"
+#     prefix = "terraform/state"
 #   }
-}
+# #   required_providers {
+# #     google = {
+# #       source  = "hashicorp/google"
+# #       version = "~> 4.0"
+# #     }
+# #   }
+# }
 
 module "GKE" {
   source            = "./modules/GKE"

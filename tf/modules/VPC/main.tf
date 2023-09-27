@@ -12,7 +12,7 @@ resource "google_compute_router" "router" {
 }
 
 #nat
-resource "google_compute_router_nat" "nat" {
+resource "google_compute_router_nat" "nat-1" {
   name   = "nat"
   router = google_compute_router.router.name
   region = "us-east1"

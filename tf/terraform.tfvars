@@ -1,11 +1,11 @@
-gcp_project_name = "demo-project"
-project_id = "atomic-airship-393617"
+gcp_project_name = "guitarnetes"
+project_id = "guitarnetes"
 region = "us-east1"
-vpc_name = "gke-vpc"
+vpc_name = "gke-vpc-1"
 subnet_name = "private-subnet"
 gke_cluster_name = "cluster-1"
 zones = ["us-east1-a", "us-east1-b", "us-east1-f"]
-ip_range_pods = "10.0.0.0/24"
+ip_range_pods = "10.0.0.0/14"
 ip_range_services = "10.0.1.0/24"
 subnet_cidr  = "10.0.1.0/24"
 
@@ -26,7 +26,7 @@ node_pools = [
     logging_variant    = "DEFAULT"
     auto_repair        = true
     auto_upgrade       = true
-    service_account    = "project-service-account@your-project-id.iam.gserviceaccount.com"
+    service_account    = "guitarnetes-service@guitarnetes.iam.gserviceaccount.com"
     preemptible        = false
     initial_node_count = 2
   },

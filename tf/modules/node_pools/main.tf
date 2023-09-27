@@ -2,6 +2,10 @@
 #   account_id = "kubernetes"
 # }
 
+# module "gke_cluster" {
+#   source = "../GKE"
+# }
+
 resource "google_container_node_pool" "node_pools" {
   count             = length(var.node_pools)
   name              = var.node_pools[count.index].name
