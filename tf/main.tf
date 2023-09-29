@@ -18,15 +18,13 @@ provider "google" {
 # }
 
 module "GKE" {
-  source            = "./modules/GKE"
+  source = "./modules/GKE" 
   gke_cluster_name  = var.gke_cluster_name
-  project_id        = var.project_id 
-  region            = var.region
-  vpc_name          = var.vpc_name
-  subnet_name       = var.subnet_name
+  project_id        = var.project_id   
+  region            = var.region     
+  vpc_name          = var.vpc_name    
+  subnet_name       = var.subnet_name 
   subnet_cidr       = var.subnet_cidr
-  zones             = var.zones
-  ip_range_pods     = var.ip_range_pods
-  ip_range_services = var.ip_range_services
-  node_pools        = var.node_pools
+  gke_num_nodes     = var.gke_num_nodes
 }
+

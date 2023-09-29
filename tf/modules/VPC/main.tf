@@ -12,8 +12,8 @@ resource "google_compute_router" "router" {
 }
 
 #nat
-resource "google_compute_router_nat" "nat-1" {
-  name   = "nat"
+resource "google_compute_router_nat" "nat" {
+  name   = "nat-1"
   router = google_compute_router.router.name
   region = "us-east1"
 
@@ -29,7 +29,7 @@ resource "google_compute_router_nat" "nat-1" {
 }
 
 resource "google_compute_address" "nat" {
-  name         = "nat"
+  name         = "nat-1"
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
 
