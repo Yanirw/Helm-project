@@ -4,18 +4,12 @@ provider "google" {
   region  = var.region
 }
 
-# terraform {
-#   backend "gcs" {
-#     bucket = "gke-project-bucket"
-#     prefix = "terraform/state"
-#   }
-# #   required_providers {
-# #     google = {
-# #       source  = "hashicorp/google"
-# #       version = "~> 4.0"
-# #     }
-# #   }
-# }
+terraform {
+  backend "gcs" {
+    bucket = "tf-guitarnetes-backend"
+    prefix = "terraform/state"
+  }
+}
 
 module "GKE" {
   source = "./modules/GKE" 
