@@ -1,14 +1,16 @@
-../tf/*.tfstate
-../tf/*.tfstate.*
-../tf/*.backup
-../tf/*.bak
+# Ignore Terraform state files and backups in the tf directory
+tf/*.tfstate
+tf/*.tfstate.*
+tf/*.backup
+tf/*.bak
 
-../tf/*.tfvars
-../tf/*.tfvars.json
-../tf/*.tfplan
+# Ignore Terraform variable files and plan files in the tf directory
+tf/*.tfvars
+tf/*.tfvars.json
+tf/*.tfplan
 
-../tf/**.terraform
+# Ignore Terraform cache directories in the tf directory
+tf/**.terraform
 
-../tf/.backup/*.tfstate.*
-
-
+# Ignore Terraform state files within the .backup directory in the tf directory
+tf/.backup/*.tfstate.*
