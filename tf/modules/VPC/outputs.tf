@@ -5,6 +5,4 @@ output "vpc_id" {
 
 output "vpc_name" {
   value       = google_compute_network.my_vpc.name
-
-
 }

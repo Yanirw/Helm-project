@@ -3,4 +3,5 @@ variable "vpc_name" {
   type        = string
 }
 
-variable "subnet" {}
+variable "subnet_name" {}
+variable "region" {}

@@ -1,7 +1,8 @@
 module "vpc" {
   source   = "../vpc"
   vpc_name = var.vpc_name
-  subnet   = module.subnet.subnet_name
+  subnet_name   = module.subnet.subnet_name
+  region   = var.region
 }
 
 module "subnet" {
@@ -11,15 +12,6 @@ module "subnet" {
   vpc_network   = module.vpc.vpc_id
   subnet_cidr   = var.subnet_cidr
 }
-
-module "node_pool" {
-  source             = "../node_pool" 
-  gke_cluster_name   = var.gke_cluster_name
-  region             = var.region
-  gke_num_nodes      = var.gke_num_nodes
-  project_id         = var.project_id
-}
-
 
 
 resource "google_container_cluster" "primary" {
@@ -31,4 +23,13 @@ resource "google_container_cluster" "primary" {
 
   network    = module.vpc.vpc_name
   subnetwork = module.subnet.subnet_name
+}
+
+module "node_pool" {
+  source             = "../node_pool" 
+  gke_cluster_name   = var.gke_cluster_name
+  region             = var.region
+  gke_num_nodes      = var.gke_num_nodes
+  project_id         = var.project_id
+  depends_on         = [ google_container_cluster.primary ]
 }

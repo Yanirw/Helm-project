@@ -7,21 +7,21 @@ resource "google_compute_network" "my_vpc" {
 #cloud router
 resource "google_compute_router" "router" {
   name    = "router"
-  region  = "us-east1"
+  region  = var.region
   network = google_compute_network.my_vpc.id
 }
 
 #nat
 resource "google_compute_router_nat" "nat" {
-  name   = "nat-1"
+  name   = "cluster-nat"
   router = google_compute_router.router.name
-  region = "us-east1"
+  region = var.region
 
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   nat_ip_allocate_option             = "MANUAL_ONLY"
 
   subnetwork {
-    name                    = var.subnet
+    name                    = var.subnet_name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 
@@ -29,7 +29,7 @@ resource "google_compute_router_nat" "nat" {
 }
 
 resource "google_compute_address" "nat" {
-  name         = "nat-1"
+  name         = "cluster-nat"
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
 

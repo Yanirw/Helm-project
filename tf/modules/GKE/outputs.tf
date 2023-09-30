@@ -11,3 +11,5 @@ output "gke_endpoint" {
 output "gke_kubeconfig" {
   value = google_container_cluster.primary.master_auth.0.client_certificate
 }
+
+
