@@ -1,5 +1,4 @@
 provider "google" {
-  credentials = file("/Users/yanir/Documents/guitarnetes-26919a8c9de8.json")
   project = var.gcp_project_name
   region  = var.region
 }

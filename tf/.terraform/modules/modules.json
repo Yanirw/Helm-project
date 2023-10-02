@@ -1,1 +1,0 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"GKE","Source":"./modules/GKE","Dir":"modules/GKE"},{"Key":"GKE.node_pool","Source":"../node_pool","Dir":"modules/node_pool"},{"Key":"GKE.subnet","Source":"../subnet","Dir":"modules/subnet"},{"Key":"GKE.vpc","Source":"../vpc","Dir":"modules/vpc"}]}
