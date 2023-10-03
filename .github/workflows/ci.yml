@@ -24,7 +24,7 @@ jobs:
     - name: Helm Template
       run: |
         cd $GITHUB_WORKSPACE
-        if helm template . -f ../env/values-prod.yaml | grep -E -i "(error:|failed|Error:)" ; then
+        if helm template . -f ./env/values-prod.yaml | grep -E -i "(error:|failed|Error:)" ; then
           echo "Helm template failed with errors."
           exit 1
         else
