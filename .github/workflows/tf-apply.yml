@@ -1,0 +1,10 @@
+# on comment
+# git checkout 
+# set up tf
+# gcloud authenticate - use secrets
+# tf init
+# if comment contains "terraform apply" , trigger terraform apply -auto-approve with no inputs flag
+# if apply fails, fail the action.
+
+
+# after all, create branch protection rule - that only if ci and tf-plan works, you can merge an pull request

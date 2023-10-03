@@ -1,0 +1,9 @@
+
+# "on" step - only in tf folder, on all pr
+# git checkout 
+# set up tf
+# gcloud authenticate - use secrets
+# tf init
+#tf plan 
+# output plan as comment
+# fair action if plan failed
