@@ -25,7 +25,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         helm_output=$(helm template . -f ./env/values-prod.yaml 2>&1)
-        if echo "$helm_output" | grep -E -i "(error:|failed|Error:)"; then
+        if echo "$helm_output" | grep -E -i "Error"; then
           echo "Helm template failed with errors."
           exit 1
         else
