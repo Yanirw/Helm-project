@@ -8,3 +8,60 @@
 
 
 # after all, create branch protection rule - that only if ci and tf-plan works, you can merge an pull request
+
+name: tf-apply
+
+on:
+   pull_request:
+    paths:
+       - '../../tf/**'
+    
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check if comment contains "terraform apply"
+      id: check-comment
+      run: |
+        if [[ ${{ github.event.comment.body }} == *"terraform apply"* ]]; then
+          echo "Terraform apply command found in the comment."
+          echo "::set-output name=apply::true"
+        else
+          echo "Terraform apply command not found in the comment."
+          echo "::set-output name=apply::false"
+        fi
+      shell: bash
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Terraform
+      run: |
+        wget https://releases.hashicorp.com/terraform/0.14.0/terraform_0.14.0_linux_amd64.zip
+        unzip terraform_0.14.0_linux_amd64.zip
+        chmod +x terraform
+        mv terraform /usr/local/bin/
+      if: steps.check-comment.outputs.apply == 'true'
+
+    - name: Authenticate with GCP
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+
+    - name: Terraform Apply
+      run: |
+        if: (contains(github.event.comment.body, 'terraform apply ') && github.event.issue.pull_request)
+          terraform apply -auto-approve -no-color
+          if [ $? -ne 0 ]; then
+            echo "Terraform apply failed."
+            exit 1
+          fi
+        else
+          echo "Terraform apply command not found in the PR comment or not a PR."
+        fi
+      if: github.event_name == 'issue_comment'
+    
