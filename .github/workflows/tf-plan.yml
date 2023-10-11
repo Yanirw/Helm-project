@@ -21,43 +21,54 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2 
+      
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
 
     - name: Authenticate with GCP
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2 
+      
+    - run: terraform init
 
-
-    - name: Initialize Terraform
-      run: terraform init
-      if: github.event_name == 'pull_request'
-
-    - name: Terraform Plan
-      run: |
-        terraform plan -out=tfplan
-        if [ $? -ne 0 ]; then
-          echo "Terraform plan failed."
-          exit 1
-        fi
-      if: github.event_name == 'pull_request'
-
-    - name: Comment with Terraform Plan
+    - id: plan
+      run: terraform plan -no-color
+    
+    - run: echo ${{ steps.plan.outputs.stdout }}
+    - run: echo ${{ steps.plan.outputs.stderr }}
+    - run: echo ${{ steps.plan.outputs.exitcode }}  
+      
+    - name: format tf plan     
       uses: actions/github-script@v6
+      env:
+        PLAN: |-
+          terraform
+          ${{ steps.plan.outputs.stdout }}
+      if: github.event_name == 'pull_request' && !contains(env.PLAN,'No changes. Your infrastructure matches the configuration.')
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const fs = require('fs');
-          const planContent = fs.readFileSync('tfplan', 'utf8');
-          const planComment = '```terraform\n' + planContent + '\n```';
-          github.issues.createComment({
+          const output = `## ${{ matrix.environment }}
+          #### Terraform Initialization :gear: \`${{ steps.init.outcome }}\`
+          #### Terraform Plan :book: \`${{ steps.plan.outcome }}\`
+
+          <details><summary>Show Plan</summary>
+
+          \`\`\`${process.env.PLAN}\`\`\`
+
+          </details>
+
+          Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`
+
+          Comment \`terraform apply ${{ env.SYSTEM }} ${{ matrix.environment }}\` to apply these changes to the current environment`;
+
+          github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: 'Terraform Plan:\n' + planComment
-          });
-      if: github.event_name == 'pull_request'
+            body: output
+          })

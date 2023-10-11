@@ -20,29 +20,18 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    if: contains(github.event.comment.body, 'terraform apply') && github.event.issue.pull_request
+
     steps:
-    - name: Check if comment contains "terraform apply"
-      id: check-comment
-      run: |
-        if [[ ${{ github.event.comment.body }} == *"terraform apply"* ]]; then
-          echo "Terraform apply command found in the comment."
-          echo "::set-output name=apply::true"
-        else
-          echo "Terraform apply command not found in the comment."
-          echo "::set-output name=apply::false"
-        fi
-      shell: bash
+     
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Terraform
-      run: |
-        wget https://releases.hashicorp.com/terraform/0.14.0/terraform_0.14.0_linux_amd64.zip
-        unzip terraform_0.14.0_linux_amd64.zip
-        chmod +x terraform
-        mv terraform /usr/local/bin/
-      if: steps.check-comment.outputs.apply == 'true'
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.1.7
 
     - name: Authenticate with GCP
       uses: 'google-github-actions/auth@v1'
@@ -54,14 +43,4 @@ jobs:
 
     - name: Terraform Apply
       run: |
-        if: (contains(github.event.comment.body, 'terraform apply ') && github.event.issue.pull_request)
           terraform apply -auto-approve -no-color
-          if [ $? -ne 0 ]; then
-            echo "Terraform apply failed."
-            exit 1
-          fi
-        else
-          echo "Terraform apply command not found in the PR comment or not a PR."
-        fi
-      if: github.event_name == 'issue_comment'
-    
