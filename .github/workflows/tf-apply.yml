@@ -44,3 +44,4 @@ jobs:
     - name: Terraform Apply
       run: |
           terraform apply -auto-approve -no-color
+      working-directory: guitarnetes-project/tf
