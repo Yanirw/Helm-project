@@ -14,7 +14,7 @@ name: tf-apply
 on:
    pull_request:
     paths:
-       - '../../tf/**'
+       - 'tf/**'
     
 jobs:
   terraform:
