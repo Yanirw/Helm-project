@@ -23,6 +23,6 @@ jobs:
 
     - name: Templates Validation
       uses: igabaydulin/helm-check-action@0.1.4
-      with:
+      env:
         CHART_LOCATION: templates
         CHART_VALUES: env/values-prod.yaml

@@ -1,5 +1,5 @@
 module "vpc" {
-  source   = "../vpc"
+  source   = "../VPC"
   vpc_name = var.vpc_name
   subnet_name   = module.subnet.subnet_name
   region   = var.region
