@@ -20,7 +20,15 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
+    
+    - name: git config
+      id: init_github
+      working-directory: tf
+      env:
+        SECRET_GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      if: "${{ env.SECRET_GIT_TOKEN != '' }}"
+      run: |
+        git config --global url."https://oauth2:${{ secrets.GIT_TOKEN }}@github.com".insteadOf ssh://git@github.com
       
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
