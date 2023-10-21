@@ -56,7 +56,7 @@ jobs:
           ${{ steps.plan.outputs.stdout }}
       if: github.event_name == 'pull_request' && !contains(env.PLAN,'No changes. Your infrastructure matches the configuration.')
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.GIT_TOKEN }}
         script: |
           const output = `## ${{ matrix.environment }}
           #### Terraform Initialization :gear: \`${{ steps.init.outcome }}\`
