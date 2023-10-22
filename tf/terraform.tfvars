@@ -6,4 +6,4 @@ subnet_name = "private-subnet"
 subnet_cidr  = "10.0.1.0/24"
 gke_cluster_name = "guitarnetes-gke"
 gke_num_nodes = 1
-
+tf_backend = "guitarnetes-tf-backend"
