@@ -13,9 +13,7 @@ name: tf-apply
 
 on:
   issue_comment:
-    types:
-      - created
-
+    types: [created, edited, deleted]
 jobs:
   terraform:
     runs-on: ubuntu-latest
