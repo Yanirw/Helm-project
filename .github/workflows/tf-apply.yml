@@ -20,7 +20,7 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    if: (contains(github.event.comment.body, 'terraform apply ') && github.event.issue.pull_request)
+    if: (contains(github.event.comment.body, 'terraform apply') && github.event.issue.pull_request)
     steps:
      
 
