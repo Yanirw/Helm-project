@@ -20,8 +20,7 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    if: contains(github.event.comment.body, 'terraform apply') && github.event.issue.pull_request
-
+    if: (contains(github.event.comment.body, 'terraform apply ') && github.event.issue.pull_request)
     steps:
      
 
@@ -43,5 +42,5 @@ jobs:
 
     - name: Terraform Apply
       run: |
-          terraform apply -auto-approve -no-color
+          terraform apply -auto-approve -no-color -var-file=terraform.tfvars
       working-directory: tf
