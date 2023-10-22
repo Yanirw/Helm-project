@@ -12,10 +12,10 @@
 name: tf-apply
 
 on:
-   pull_request:
-    paths:
-       - 'tf/**'
-    
+  issue_comment:
+    types:
+      - created
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
