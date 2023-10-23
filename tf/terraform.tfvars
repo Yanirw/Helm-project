@@ -1,4 +1,4 @@
-gcp_project_name = "guitarnetes"
+gcp_project_name = "guitarnetes1"
 project_id = "guitarnetes1"
 region = "us-east1"
 vpc_name = "gke-vpc-1"
