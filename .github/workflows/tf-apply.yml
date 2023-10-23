@@ -12,15 +12,19 @@
 name: tf-apply
 
 on:
+  workflow_dispatch:
   issue_comment:
-    types: [created, edited, deleted]
+   types: [created]
+   
+     
+
 jobs:
   terraform:
+    if: contains(github.event.comment.body, 'terraform apply')
     runs-on: ubuntu-latest
 
-    if: (contains(github.event.comment.body, 'terraform apply') && github.event.issue.pull_request)
     steps:
-     
+    
 
     - name: Checkout code
       uses: actions/checkout@v3

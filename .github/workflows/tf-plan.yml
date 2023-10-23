@@ -9,6 +9,7 @@
 name: Terraform Plan
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'tf/**'
@@ -75,7 +76,7 @@ jobs:
 
           Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`
 
-          Comment \`terraform apply ${{ env.SYSTEM }} ${{ matrix.environment }}\` to apply these changes to the current environment`;
+          Comment \`terraform apply\` to apply these changes to the current environment`;
 
           github.rest.issues.createComment({
             issue_number: context.issue.number,

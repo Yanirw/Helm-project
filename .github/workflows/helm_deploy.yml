@@ -1,0 +1,55 @@
+name: helm_deploy
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'templates/**'
+    types:
+      - closed
+
+  
+jobs:
+  
+  helm_template:
+    if: github.event.pull_request.merged == true
+    name: Helm Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: 'latest'
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+    - id: 'get-credentials'
+      uses: 'google-github-actions/get-gke-credentials@v1'
+      with:
+        cluster_name: 'guitarnetes-gke'
+        location: 'us-east1'     
+
+        
+    - name: Package Helm Chart
+      run: |
+        helm package /templates
+        mv *.tgz chart.tgz
+      working-directory:  /templates
+
+    - name: Install Helm Chart
+      run: |
+        helm install my-release chart.tgz
+      working-directory: /templates
+
+    - name: Verify Installation
+      run: |
+        kubectl get pods
+        kubectl get services
+      continue-on-error: true
