@@ -1,48 +1,35 @@
-# on comment
-# git checkout 
-# set up tf
-# gcloud authenticate - use secrets
-# tf init
-# if comment contains "terraform apply" , trigger terraform apply -auto-approve with no inputs flag
-# if apply fails, fail the action.
+name: Terraform Apply
 
-
-# after all, create branch protection rule - that only if ci and tf-plan works, you can merge an pull request
-
-name: tf-apply
-
-on:
-  workflow_dispatch:
-  issue_comment:
-   types: [created]
-   
-     
+on: [issue_comment]
 
 jobs:
-  terraform:
-    if: contains(github.event.comment.body, 'terraform apply')
+  apply:
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, 'terraform apply') }}
     runs-on: ubuntu-latest
-
+    name: Apply terraform plan
+    env:
+      GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
     steps:
-    
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/merge
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Authenticate with GCP
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.1.7
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2 
+          
+      - id: init
+        run: terraform init
+        working-directory: tf
+              
 
-    - name: Authenticate with GCP
-      uses: 'google-github-actions/auth@v1'
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
-
-    - name: Terraform Apply
-      run: |
-          terraform apply -auto-approve -no-color -var-file=terraform.tfvars
-      working-directory: tf
+      - name: terraform apply
+        uses: dflook/terraform-apply@v1
+        with:
+          path: tf
+          

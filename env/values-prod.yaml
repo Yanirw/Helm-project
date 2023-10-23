@@ -2,7 +2,7 @@ client:
   name: client
   autoscaling:
     enabled: true
-  replicaCount: 1
+  replicaCount: 2
   image: 
     name: yanirdocker/multi-client
     tag: latest

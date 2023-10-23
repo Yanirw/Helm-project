@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - 'templates/**'
+      - 'env/**'
   
 jobs:
   helm_template:
