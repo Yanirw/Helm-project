@@ -1,6 +1,7 @@
 name: Terraform Apply
 
 on: [issue_comment]
+  
 
 jobs:
   apply:
@@ -23,10 +24,6 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2 
           
-      - id: init
-        run: terraform init
-        working-directory: tf
-              
 
       - name: terraform apply
         uses: dflook/terraform-apply@v1

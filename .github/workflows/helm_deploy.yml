@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'templates/**'
+      - 'env/**'
     types:
       - closed
 
