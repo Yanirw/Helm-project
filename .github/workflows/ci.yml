@@ -6,6 +6,8 @@ on:
     branches:
       - main 
   pull_request:
+    paths:
+      - 'templates/**'
   
 jobs:
   helm_template:
@@ -21,13 +23,8 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Helm Template
-      run: |
-       if helm template .. --values ../env/values-prod.yaml | grep -E -i "(error:|failed|Error:)" ; then
-          echo "Helm template failed with errors."
-          exit 1
-        else
-          echo "Helm template succeeded."
-        fi
-    
-    
+    - name: Templates Validation
+      uses: igabaydulin/helm-check-action@0.1.4
+      env:
+        CHART_LOCATION: templates
+        CHART_VALUES: env/values-prod.yaml

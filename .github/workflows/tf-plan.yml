@@ -1,0 +1,86 @@
+# "on" step - only in tf folder, on all pr
+# git checkout 
+# set up tf
+# gcloud authenticate - use secrets
+# tf init
+#tf plan 
+# output plan as comment
+# fail action if plan failed
+name: Terraform Plan
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tf/**'
+
+jobs:
+  terraform:
+    strategy:
+      matrix:
+        environment: [prod]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: git config
+      id: init_github
+      working-directory: tf
+      env:
+        SECRET_GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      if: "${{ env.SECRET_GIT_TOKEN != '' }}"
+      run: |
+        git config --global url."https://oauth2:${{ secrets.GIT_TOKEN }}@github.com".insteadOf ssh://git@github.com
+      
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+
+    - name: Authenticate with GCP
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2 
+      
+    - id: init
+      run: terraform init
+      working-directory: tf
+
+    - id: plan
+      run: terraform plan -no-color
+      working-directory: tf
+    
+    - name: format tf plan     
+      uses: actions/github-script@v6
+      env:
+        PLAN: |-
+          terraform
+          ${{ steps.plan.outputs.stdout }}
+      if: github.event_name == 'pull_request' && !contains(env.PLAN,'No changes. Your infrastructure matches the configuration.')
+      with:
+        github-token: ${{ secrets.GIT_TOKEN }}
+        script: |
+          const output = `## ${{ matrix.environment }}
+          #### Terraform Initialization :gear: \`${{ steps.init.outcome }}\`
+          #### Terraform Plan :book: \`${{ steps.plan.outcome }}\`
+
+          <details><summary>Show Plan</summary>
+
+          \`\`\`${process.env.PLAN}\`\`\`
+
+          </details>
+
+          Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`
+
+          Comment \`terraform apply\` to apply these changes to the current environment`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
