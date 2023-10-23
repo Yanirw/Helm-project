@@ -24,8 +24,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    
+      uses: actions/checkout@v2  
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
     - name: git config
       id: init_github
       working-directory: tf
