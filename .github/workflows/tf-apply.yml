@@ -32,4 +32,6 @@ jobs:
         uses: dflook/terraform-apply@v1
         with:
           path: tf
+          auto_approve: true
+
           
