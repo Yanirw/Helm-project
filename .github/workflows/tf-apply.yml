@@ -30,4 +30,3 @@ jobs:
         with:
           path: tf
           auto_approve: true
-  
