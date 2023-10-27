@@ -41,13 +41,13 @@ jobs:
         
     - name: Package Helm Chart
       run: |
-        helm package /templates
+        helm package .
         mv *.tgz chart.tgz
       working-directory: templates
 
     - name: Install Helm Chart
       run: |
-        helm install my-release chart.tgz
+        helm install guitarnetes chart.tgz
       working-directory: templates
 
     - name: Verify Installation
