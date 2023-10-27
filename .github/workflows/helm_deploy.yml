@@ -40,7 +40,8 @@ jobs:
 
     - name: Helm Lint
       run: |
-        helm lint . -f /env/values-prod.yaml
+        helm lint . -f ../env/values-prod.yaml
+      working-directory: templates  
     
     - name: Package Helm Chart
       run: |
