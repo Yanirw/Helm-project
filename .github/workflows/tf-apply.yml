@@ -1,6 +1,7 @@
 name: Terraform Apply
 
 on: [issue_comment]
+  
 
 jobs:
   apply:
@@ -11,9 +12,9 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.issue.number }}/merge
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Authenticate with GCP
         uses: 'google-github-actions/auth@v1'
@@ -23,15 +24,9 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2 
           
-      - id: init
-        run: terraform init
-        working-directory: tf
-              
 
       - name: terraform apply
         uses: dflook/terraform-apply@v1
         with:
           path: tf
           auto_approve: true
-
-          

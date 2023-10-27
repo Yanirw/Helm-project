@@ -24,8 +24,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
     - name: git config
       id: init_github
       working-directory: tf
@@ -76,7 +78,7 @@ jobs:
 
           Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`
 
-          Comment \`terraform apply\` to apply these changes to the current environment`;
+          Comment to apply these changes to the current environment`;
 
           github.rest.issues.createComment({
             issue_number: context.issue.number,
