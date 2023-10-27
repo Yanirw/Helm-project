@@ -38,10 +38,12 @@ jobs:
         cluster_name: 'guitarnetes-gke1'
         location: 'us-east1'     
 
-        
     - name: Package Helm Chart
       run: |
-        helm lint
+        helm lint . -f /env/values-prod.yaml
+    
+    - name: Package Helm Chart
+      run: |
         helm package .
         mv *.tgz chart.tgz
       working-directory: templates
