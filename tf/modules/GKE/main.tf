@@ -23,6 +23,7 @@ resource "google_container_cluster" "primary" {
 
   network    = module.vpc.vpc_name
   subnetwork = module.subnet.subnet_name
+  deletion_protection = false
 }
 
 module "node_pool" {

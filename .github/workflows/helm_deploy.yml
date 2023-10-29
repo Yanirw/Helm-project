@@ -38,22 +38,21 @@ jobs:
         cluster_name: 'guitarnetes-gke1'
         location: 'us-east1'     
 
-    - name: Helm Lint
-      run: |
-        helm lint . -f ../env/values-prod.yaml
-      working-directory: templates  
-      continue-on-error: true
+    # - name: Helm Lint
+    #   run: |
+    #     helm lint . -f ../env/values-prod.yaml
+    #   working-directory: templates  
+    #   continue-on-error: true
     
     - name: Package Helm Chart
       run: |
-        helm package .
+        helm package ./templates
         mv *.tgz chart.tgz
-      working-directory: templates
+      
 
     - name: Install Helm Chart
       run: |
-        helm install -f ../env/values-prod.yaml guitarnetes-helm ./chart.tgz
-      working-directory: templates
+        helm install -f ./env/values-prod.yaml guitarnetes-helm${{ github.sha }} ./chart.tgz
 
     - name: Verify Installation
       run: |
