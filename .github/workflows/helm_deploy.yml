@@ -52,7 +52,7 @@ jobs:
 
     - name: Install Helm Chart
       run: |
-        helm install -f ./env/values-prod.yaml guitarnetes-helm-${{ github.job }} ./chart.tgz
+        helm install -f ./env/values-prod.yaml guitarnetes-helm ./chart.tgz
 
     - name: Verify Installation
       run: |
