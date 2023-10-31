@@ -7,8 +7,8 @@ on:
       - main 
   pull_request:
     paths:
-      - 'templates/**'
-      - 'env/**'
+      - 'webapp/**'
+    
   
 jobs:
   helm_template:
@@ -30,5 +30,5 @@ jobs:
     - name: Templates Validation
       uses: igabaydulin/helm-check-action@0.1.4
       env:
-        CHART_LOCATION: templates
-        CHART_VALUES: env/values-prod.yaml
+        CHART_LOCATION: webapp/templates
+        CHART_VALUES: webapp/env/values-prod.yaml

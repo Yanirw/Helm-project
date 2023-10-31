@@ -44,15 +44,10 @@ jobs:
     #   working-directory: templates  
     #   continue-on-error: true
     
-    - name: Package Helm Chart
-      run: |
-        helm package ./templates
-        mv *.tgz chart.tgz
-      
 
     - name: Install Helm Chart
       run: |
-        helm install -f ./env/values-prod.yaml guitarnetes-helm ./chart.tgz
+        helm install -f ./webapp/env/values-prod.yaml guitarnetes-helm22 ./webapp
 
     - name: Verify Installation
       run: |
