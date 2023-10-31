@@ -13,7 +13,7 @@ on:
 jobs:
   
   helm_template:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     name: Helm Deploy
     runs-on: ubuntu-latest
 
@@ -35,20 +35,19 @@ jobs:
     - id: 'get-credentials'
       uses: 'google-github-actions/get-gke-credentials@v1'
       with:
-        cluster_name: 'guitarnetes-gke1'
+        cluster_name: 'guitarnetes-gke2'
         location: 'us-east1'     
 
-        
-    - name: Package Helm Chart
-      run: |
-        helm package .
-        mv *.tgz chart.tgz
-      working-directory: templates
+    # - name: Helm Lint
+    #   run: |
+    #     helm lint . -f ../env/values-prod.yaml
+    #   working-directory: templates  
+    #   continue-on-error: true
+    
 
     - name: Install Helm Chart
       run: |
-        helm install guitarnetes chart.tgz
-      working-directory: templates
+        helm install -f ./webapp/env/values-prod.yaml guitarnetes-helm22 ./webapp
 
     - name: Verify Installation
       run: |
