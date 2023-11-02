@@ -38,16 +38,9 @@ jobs:
         cluster_name: 'guitarnetes-gke2'
         location: 'us-east1'     
 
-    # - name: Helm Lint
-    #   run: |
-    #     helm lint . -f ../env/values-prod.yaml
-    #   working-directory: templates  
-    #   continue-on-error: true
-    
-
     - name: Install Helm Chart
       run: |
-        helm install -f ./webapp/env/values-prod.yaml guitarnetes-helm22 ./webapp
+        helm install -f ./webapp/env/values-prod.yaml guitarnetes-helm-1 ./webapp
 
     - name: Verify Installation
       run: |

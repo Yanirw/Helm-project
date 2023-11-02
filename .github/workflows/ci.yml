@@ -27,8 +27,25 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Templates Validation
-      uses: igabaydulin/helm-check-action@0.1.4
-      env:
-        CHART_LOCATION: ./webapp
-        CHART_VALUES: ./webapp/env/values-prod.yaml
+    - name: Lint Helm Chart
+      run: |
+        helm lint ./webapp --values ./webapp/env/values-prod.yaml
+        if [ $? -ne 0 ]; then
+          echo "Error in Helm lint"
+          exit 1
+        else
+          echo "Lint is successful"
+        fi
+      
+    - name: Helm Template
+      run: |
+        helm template ./webapp --values ./webapp/env/values-prod.yaml
+        if [ $? -ne 0 ]; then
+          echo "Error in helm template"
+          exit 1
+        else
+          echo "Helm Chart is good"
+          exit 0
+        fi
+
+
