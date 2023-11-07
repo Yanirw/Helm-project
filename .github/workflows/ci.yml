@@ -23,7 +23,7 @@ jobs:
 
 
     - name: Set up Helm
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@v3
       with:
         version: 'latest'
 
@@ -34,7 +34,7 @@ jobs:
           echo "Error in Helm lint"
           exit 1
         else
-          echo "Lint is successful"
+          echo "Lint is successful"  
         fi
       
     - name: Helm Template

@@ -1,8 +1,0 @@
-==> Linting ./webapp
-[INFO] Chart.yaml: icon is recommended
-[INFO] values.yaml: file does not exist
-[WARNING] templates/pdb-client.yaml: policy/v1beta1 PodDisruptionBudget is deprecated in v1.21+, unavailable in v1.25+; use policy/v1 PodDisruptionBudget
-[WARNING] templates/pdb-server.yaml: policy/v1beta1 PodDisruptionBudget is deprecated in v1.21+, unavailable in v1.25+; use policy/v1 PodDisruptionBudget
-[WARNING] templates/pdb-worker.yaml: policy/v1beta1 PodDisruptionBudget is deprecated in v1.21+, unavailable in v1.25+; use policy/v1 PodDisruptionBudget
-
-1 chart(s) linted, 0 chart(s) failed
