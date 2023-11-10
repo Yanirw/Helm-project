@@ -35,7 +35,7 @@ jobs:
     - id: 'get-credentials'
       uses: 'google-github-actions/get-gke-credentials@v1'
       with:
-        cluster_name: 'guitarnetes-gke2'
+        cluster_name: 'guitarnetes-gke'
         location: 'us-east1'     
 
     - name: Install Helm Chart
