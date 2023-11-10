@@ -3,7 +3,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ .Values.worker.name }}
 spec:
-  minUnavailable: {{ .Values.pdbServer.minUnavailable }}
+  maxUnavailable: {{ .Values.pdbServer.maxUnavailable }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Values.worker.name }}
