@@ -37,8 +37,10 @@ spec:
             - name: server
               containerPort: {{ .Values.server.spec.template.spec.containers.image.ports.containerPort }}
               protocol: TCP
+          {{ if .Values.server.spec.template.spec.containers.env }}    
           env:
-            {{- toYaml .Values.server.spec.template.spec.containers.env | nindent 12 }}   
+            {{- toYaml .Values.server.spec.template.spec.containers.env | nindent 12 }}
+          {{- end }}     
           livenessProbe:
             httpGet:
               path: /
