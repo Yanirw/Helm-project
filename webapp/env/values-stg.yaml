@@ -198,13 +198,13 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdbClient:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 pdbServer:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 pdbWorker:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 
 nodeSelector: {}

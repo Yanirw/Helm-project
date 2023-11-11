@@ -1,7 +1,7 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.worker.name }}-pdb
+  name: {{ .Values.worker.name }}
 spec:
   maxUnavailable: {{ .Values.pdbWorker.maxUnavailable }}
   selector:
