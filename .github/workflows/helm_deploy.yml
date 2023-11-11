@@ -40,7 +40,7 @@ jobs:
 
     - name: Install Helm Chart
       run: |
-        helm install -f ./webapp/env/values-prod.yaml guitarnetes-helm-1 ./webapp
+        helm upgrade -i -f ./webapp/env/values-prod.yaml guitarnetes-helm-1 ./webapp
 
     - name: Verify Installation
       run: |
