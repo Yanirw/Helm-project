@@ -1,9 +1,9 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.worker.name }}
+  name: {{ .Values.server.name }}
 spec:
   maxUnavailable: {{ .Values.pdbServer.maxUnavailable }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.worker.name }}
+      app.kubernetes.io/name: {{ .Values.server.name }}
