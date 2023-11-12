@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      component: {{ .Values.worker.component }}
+      component: {{ .Values.worker.selector.matchLabels.component }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
