@@ -28,10 +28,10 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+          name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.worker.repository }}:{{ .Values.worker.repository_tag }}"
+          image: {{ .Values.worker.repository }}:{{ .Values.worker.repository_tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             {{- range .Values.worker.template.spec.containers }}
