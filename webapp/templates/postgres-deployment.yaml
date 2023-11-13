@@ -32,7 +32,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.postgres.claimName}}
       containers:
-          name: {{ .Values.postgres.containers.name }}
+        - name: {{ .Values.postgres.containers.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.postgres.containers.image }}:{{ .Values.postgres.containers.tag }}
