@@ -3,34 +3,34 @@ kind: Deployment
 metadata:
   name: {{ .Values.client.name }}-deployment
   labels:
-    {{- include "zur.labels" . | nindent 4 }}
+{{- include "zur.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.client.autoscaling.enabled }}
+{{- if not .Values.client.autoscaling.enabled }}
   replicas: {{ .Values.client.replicaCount }}
-  {{- end }}
+{{- end }}
   selector:
     matchLabels:
       component: {{ .Values.client.component }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+{{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
       labels:
         component: {{ .Values.client.component }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+{{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
       serviceAccountName: {{ include "zur.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+{{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+{{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.client.image.name }}:{{ .Values.client.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -45,7 +45,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1
-            failureThreshold: 3  
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /
@@ -54,18 +54,18 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             successThreshold: 1
-            failureThreshold: 3  
+            failureThreshold: 3
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+{{- toYaml .Values.resources | nindent 12 }}
+{{- with .Values.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
+{{- with .Values.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
+{{- with .Values.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
