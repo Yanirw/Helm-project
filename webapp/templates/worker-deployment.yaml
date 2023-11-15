@@ -44,11 +44,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: 6379
           readinessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: 6379
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
