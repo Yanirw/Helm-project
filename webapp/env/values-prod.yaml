@@ -23,11 +23,11 @@ postgres:
     ports: 
       containerPort: 5432
     volumeMounts:
-      name: postgres-storage
+    - name: postgres
       mountPath: /var/lib/postgresql/data
       subPath: postgres
     env:
-      name: POSTGRES_PASSWORD
+    - name: POSTGRES_PASSWORD
       valueFrom:
         secretKeyRef:
           name: pgpassword
@@ -80,24 +80,24 @@ server:
             tag: latest
             ports:  
               containerPort: 5000
-            env: 
-              - name: REDIS_HOST
-                value: redis-cluster-ip-service
-              - name: REDIS_PORT
-                value: '6379'
-              - name: PGUSER
-                value: postgres
-              - name: PGHOST
-                value: postgres-cluster-ip-service
-              - name: PGPORT
-                value: '5432'
-              - name: PGDATABASE
-                value: postgres
-              - name: PGPASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: pgpassword
-                    key: PGPASSWORD             
+          env: 
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379'
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD             
   service:
     selector:
       component: server
@@ -198,13 +198,13 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdbClient:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 pdbServer:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 pdbWorker:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 
 nodeSelector: {}
@@ -212,5 +212,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-

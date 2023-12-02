@@ -23,7 +23,7 @@ jobs:
       with:
         ref: ${{ github.event.pull_request.head.sha }}
     - name: Set up Helm
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@v3
       with:
         version: 'latest'
 
@@ -35,19 +35,12 @@ jobs:
     - id: 'get-credentials'
       uses: 'google-github-actions/get-gke-credentials@v1'
       with:
-        cluster_name: 'guitarnetes-gke2'
+        cluster_name: 'guitarnetes-gke'
         location: 'us-east1'     
-
-    # - name: Helm Lint
-    #   run: |
-    #     helm lint . -f ../env/values-prod.yaml
-    #   working-directory: templates  
-    #   continue-on-error: true
-    
 
     - name: Install Helm Chart
       run: |
-        helm install -f ./webapp/env/values-prod.yaml guitarnetes-helm22 ./webapp
+        helm upgrade -i -f ./webapp/env/values-prod.yaml guitarnetes-helm-1 ./webapp
 
     - name: Verify Installation
       run: |

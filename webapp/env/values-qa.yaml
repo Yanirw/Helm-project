@@ -158,9 +158,10 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
+# Excluded for testing:
+# service:
+#   type: ClusterIP
+#   port: 80
 
 ingress:
   enabled: false
@@ -198,13 +199,13 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdbClient:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 pdbServer:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 pdbWorker:
-  minUnavailable: 2
+  maxUnavailable: 2
 
 
 nodeSelector: {}

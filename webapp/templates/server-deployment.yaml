@@ -31,14 +31,16 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ index .Values.server.spec.template.spec.containers.image.name }}:{{ .Values.server.spec.template.spec.containers.image.tag }}"
+          image: {{ index .Values.server.spec.template.spec.containers.image.name }}:{{ .Values.server.spec.template.spec.containers.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: server
               containerPort: {{ .Values.server.spec.template.spec.containers.image.ports.containerPort }}
               protocol: TCP
+          {{ if .Values.server.spec.template.spec.containers.env }}    
           env:
-            {{- toYaml .Values.server.spec.template.spec.containers.env | nindent 12 }}   
+            {{- toYaml .Values.server.spec.template.spec.containers.env | nindent 12 }}
+          {{- end }}     
           livenessProbe:
             httpGet:
               path: /
