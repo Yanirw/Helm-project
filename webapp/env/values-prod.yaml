@@ -13,7 +13,7 @@ client:
 
 postgres:
   name: postgres
-  replicaCount: 10
+  replicaCount: 1
   component: postgres
   claimName: database-persistent-volume-claim
   containers:
