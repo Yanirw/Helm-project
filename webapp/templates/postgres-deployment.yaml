@@ -35,7 +35,7 @@ spec:
         - name: {{ .Values.postgres.containers.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.postgres.containers.image }}:{{ .Values.postgres.containers.tag }}"
+          image: {{ .Values.postgres.containers.image }}:{{ .Values.postgres.containers.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.postgres.containers.ports.containerPort }}

@@ -31,24 +31,23 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.worker.repository }}:{{ .Values.worker.repository_tag }}"
+          image: {{ .Values.worker.repository }}:{{ .Values.worker.repository_tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            {{- range .Values.worker.template.spec.containers }}
-            {{- range .env }}
-            - name: {{ .name | quote }}
-              value: {{ .value | quote }}
+            {{- range $env := .Values.worker.template.spec.containers }}
+            {{- range $var := $env.env }}
+            - name: {{ $var.name | quote }}
+              value: {{ $var.value | quote }}
             {{- end }}
             {{- end }}
-            
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
