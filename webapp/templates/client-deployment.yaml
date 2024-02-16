@@ -46,12 +46,21 @@ spec:
     canary:
       steps:
         - setWeight: 10
-          pause:
-            duration: 1m
+        - analysis:
+            templates:
+              - templateName: basic-check
+            args:
+              - name: service-name
+                value: "{{ .Release.Name }}"
+          pause: {duration: 1m}
         - setWeight: 50
-          pause:
-            duration: 1m
-
+        - analysis:
+            templates:
+              - templateName: basic-check
+            args:
+              - name: service-name
+                value: "{{ .Release.Name }}"
+          pause: {duration: 1m}
 ---
 
 apiVersion: argoproj.io/v1alpha1
