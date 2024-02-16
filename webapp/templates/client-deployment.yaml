@@ -46,15 +46,9 @@ spec:
     canary:
       steps:
         - setWeight: 10
-          analysis:
-            templates:
-              - name: basic-check
           pause:
             duration: 1m
         - setWeight: 50
-          analysis:
-            templates:
-              - name: common-check
           pause:
             duration: 1m
 
@@ -70,7 +64,7 @@ spec:
       interval: 1m
       provider:
         mock:
-          value: 800  # Set a fixed value for testing purposes (e.g., 800 milliseconds)
+          value: 800
       successCondition: result[0] < 1000
       failureCondition: result[0] >= 1000
   args:
