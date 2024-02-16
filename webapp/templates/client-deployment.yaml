@@ -5,19 +5,32 @@ metadata:
   labels:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.client.replicaCount }}
   selector:
     matchLabels:
       component: {{ .Values.client.component }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         component: {{ .Values.client.component }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "zur.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.client.image.name }}:{{ .Values.client.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.client.service.port }}
@@ -42,40 +55,25 @@ spec:
             failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   strategy:
     canary:
       steps:
-        - setWeight: 10
-        - analysis:
-            templates:
-              - templateName: basic-check
-            args:
-              - name: service-name
-                value: "{{ .Release.Name }}"
-          pause: {duration: 1m}
+        - setWeight: 20
+        - pause: {duration: 1m}
         - setWeight: 50
-        - analysis:
-            templates:
-              - templateName: basic-check
-            args:
-              - name: service-name
-                value: "{{ .Release.Name }}"
-          pause: {duration: 1m}
----
+        - pause: {duration: 1m}
+        - setWeight: 100
 
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
-  name: basic-check
-spec:
-  metrics:
-    - name: latency
-      interval: 1m
-      provider:
-        mock:
-          value: 800
-      successCondition: result[0] < 1000
-      failureCondition: result[0] >= 1000
-  args:
-    - name: service-name
-      value: "{{ .Release.Name }}"
+
