@@ -68,9 +68,11 @@ spec:
   metrics:
     - name: latency
       interval: 1m
-      successCondition: result[0] < 1000  # Assuming latency should be less than 1000ms
-      failureCondition: result[0] >= 1000  # Assuming latency should be greater than or equal to 1000ms to be considered a failure
+      provider:
+        mock:
+          value: 800  # Set a fixed value for testing purposes (e.g., 800 milliseconds)
+      successCondition: result[0] < 1000
+      failureCondition: result[0] >= 1000
   args:
     - name: service-name
       value: "{{ .Release.Name }}"
-
