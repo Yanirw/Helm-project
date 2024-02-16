@@ -1,39 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: {{ .Values.client.name }}-deployment
+  name: {{ .Values.client.name }}-rollout
   labels:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.client.autoscaling.enabled }}
-  replicas: {{ .Values.client.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       component: {{ .Values.client.component }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         component: {{ .Values.client.component }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "zur.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.client.image.name }}:{{ .Values.client.image.tag }}"
-
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.client.service.port }}
@@ -46,7 +30,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1
-            failureThreshold: 3  
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /
@@ -55,18 +39,38 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             successThreshold: 1
-            failureThreshold: 3  
+            failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+  strategy:
+    canary:
+      steps:
+        - setWeight: 10
+          analysis:
+            templates:
+              - name: basic-check
+          pause:
+            duration: 1m
+        - setWeight: 50
+          analysis:
+            templates:
+              - name: common-check
+          pause:
+            duration: 1m
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: basic-check
+spec:
+  metrics:
+    - name: latency
+      interval: 1m
+      successCondition: result[0] < 1000  # Assuming latency should be less than 1000ms
+      failureCondition: result[0] >= 1000  # Assuming latency should be greater than or equal to 1000ms to be considered a failure
+  args:
+    - name: service-name
+      value: "{{ .Release.Name }}"
+
