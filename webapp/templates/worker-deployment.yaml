@@ -1,7 +1,7 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: {{ .Values.worker.name }}-deployment
+  name: {{ .Values.worker.name }}-rollout
   labels:
     {{- include "zur.labels" . | nindent 4 }}
 spec:
@@ -62,3 +62,16 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {duration: 1m}
+        - analysis:
+            templates:
+              - templateName: always-pass-analysis
+        - setWeight: 50
+        - pause: {duration: 1m}
+        - analysis:
+            templates:
+              - templateName: always-pass-analysis

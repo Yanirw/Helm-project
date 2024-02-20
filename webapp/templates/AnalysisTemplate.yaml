@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: always-pass-analysis
+spec:
+  metrics:
+  - name: test-analysis
+    successCondition: "true"
+    provider:
+      job:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: always-succeed
+                image: alpine
+                command: ["/bin/sh", "-c"]
+                args: ["echo 'Dummy analysis always succeeds'; exit 0"]
+              restartPolicy: Never
