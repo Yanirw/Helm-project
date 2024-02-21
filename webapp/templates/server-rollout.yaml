@@ -76,7 +76,7 @@ spec:
   strategy:
     canary:
       steps:
-        - setWeight: 20
+        - setWeight: 10
         - pause: {duration: 1m}
         - analysis:
             templates:
@@ -86,3 +86,4 @@ spec:
         - analysis:
             templates:
               - templateName: always-pass-analysis
+        - setWeight: 100      

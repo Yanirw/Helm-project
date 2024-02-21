@@ -80,3 +80,4 @@ spec:
         - analysis:
             templates:
               - templateName: always-pass-analysis
+        - setWeight: 100      
